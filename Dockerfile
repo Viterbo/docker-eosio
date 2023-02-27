@@ -58,6 +58,8 @@ WORKDIR /app
 
 RUN apt-get install -y jq
 
+RUN curl -o- https://raw.githubusercontent.com/paybase/qp/master/install.sh | sh
+
 USER user
 
 ENTRYPOINT ["/entrypoint.sh"]
