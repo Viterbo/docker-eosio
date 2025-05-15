@@ -56,11 +56,6 @@ COPY logging.json /
 
 RUN apt-get install -y jq
 
-# RUN echo "alias ll='ls -las'" >> /etc/profile.d/aliases.sh
-# RUN echo "alias telosmain='cleos --url https://telos.caleos.io '" >> /etc/profile.d/aliases.sh
-# RUN echo "alias telostest='cleos --url https://testnet.telos.caleos.io '" >> /etc/profile.d/aliases.sh
-# RUN chmod +x /etc/profile.d/aliases.sh
-
 # support for icons on the command line
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
