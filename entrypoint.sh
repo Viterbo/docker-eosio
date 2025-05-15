@@ -34,26 +34,30 @@ cleos wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79z
 
 sleep 1
 
+export HOME=/app
+
 if [[ -f $PWD/docker/entrypoint.sh ]]; then
-    echo entry point found!
-    echo "runing: $PWD/docker/entrypoint.sh"
+    echo "entry point found! $PWD/docker/entrypoint.sh"
+    echo "--------------------------------------------"
     $PWD/docker/entrypoint.sh
 fi
 
 
+# echo "**********"
+# cat /etc/profile.d/aliases.sh
+# source /etc/profile.d/aliases.sh
+# echo "**********"
+
 echo "----------"
-echo "export HOME=/app"
-echo "./docker/scripts/_compile.sh"
-echo "./docker/scripts/_test.sh"
-echo "./docker/scripts/_basictoken_apply.sh"
+echo "alias ll='ls -las'"
+echo "alias telosmain='cleos --url https://telos.caleos.io '"
+echo "alias telostest='cleos --url https://testnet.telos.caleos.io '"
 echo "----------"
 echo "tail -f /tmp/nodeos.log"
-echo "alias ll='ls -las'"
-echo "alias telosmain='cleos --url https://telos.eosphere.io '"
-echo "alias telosmain='cleos --url https://telos.caleos.io '"
 echo "cleos wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 echo "telosmain system newaccount --stake-net '0.5000 TLOS' --stake-cpu '0.5000 TLOS' --buy-ram-kbytes 3 viterbotelos cryptokibutz EOS5SicH9s2UGrDFJuM23CpiC9FmpbrBvXrFEYkutucAJnVZmHPj7 EOS8MPwGHuGSHSfBp3HAWsrHDotAqp9ZPShBvNcGDpcmNNa5h8y1Q -p viterbotelos@active"
 echo "wget -q -O - ""$@"" http://localhost:8888/v1/chain/get_info | jq"
 echo "----------"
 bash
+
 

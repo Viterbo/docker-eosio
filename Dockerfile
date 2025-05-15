@@ -24,29 +24,29 @@ RUN python3.9 --version
 
 # https://developers.eos.io/welcome/latest/getting-started/development-environment/introduction
 
-# /usr/opt/eosio/2.0.0
-RUN wget https://github.com/EOSIO/eos/releases/download/v2.0.0/eosio_2.0.0-1-ubuntu-18.04_amd64.deb
-
 # /usr/opt/eosio/2.0.13
 RUN wget https://github.com/EOSIO/eos/releases/download/v2.0.13/eosio_2.0.13-1-ubuntu-18.04_amd64.deb
 
+# /usr/opt/eosio/2.0.0
+# RUN wget https://github.com/EOSIO/eos/releases/download/v2.0.0/eosio_2.0.0-1-ubuntu-18.04_amd64.deb
+
 # /usr/opt/eosio/1.8.14
-RUN wget https://github.com/EOSIO/eos/releases/download/v1.8.14/eosio_1.8.14-1-ubuntu-18.04_amd64.deb
-
-# /usr/opt/eosio.cdt/1.7.0
-RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
-
-# /usr/opt/eosio.cdt/1.6.3
-RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.6.3/eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
+# RUN wget https://github.com/EOSIO/eos/releases/download/v1.8.14/eosio_1.8.14-1-ubuntu-18.04_amd64.deb
 
 # /usr/opt/eosio.cdt/1.8.1
 RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.8.1/eosio.cdt_1.8.1-1-ubuntu-20.04_amd64.deb
+
+# /usr/opt/eosio.cdt/1.7.0
+# RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.7.0/eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
+
+# /usr/opt/eosio.cdt/1.6.3
+# RUN wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.6.3/eosio.cdt_1.6.3-1-ubuntu-18.04_amd64.deb
 
 RUN pwd && ls -las
 
 RUN apt-get install -y ./eosio_2.0.13-1-ubuntu-18.04_amd64.deb
 
-RUN apt-get install -y ./eosio.cdt_1.7.0-1-ubuntu-18.04_amd64.deb
+RUN apt-get install -y ./eosio.cdt_1.8.1-1-ubuntu-20.04_amd64.deb
 
 RUN apt-get install -y mlocate; updatedb
 
@@ -54,9 +54,28 @@ COPY entrypoint.sh /
 
 COPY logging.json /
 
-WORKDIR /app
-
 RUN apt-get install -y jq
+
+# RUN echo "alias ll='ls -las'" >> /etc/profile.d/aliases.sh
+# RUN echo "alias telosmain='cleos --url https://telos.caleos.io '" >> /etc/profile.d/aliases.sh
+# RUN echo "alias telostest='cleos --url https://testnet.telos.caleos.io '" >> /etc/profile.d/aliases.sh
+# RUN chmod +x /etc/profile.d/aliases.sh
+
+# support for icons on the command line
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=xterm-256color
+ENV PS1="\[\e[0;32m\]\u@\h \[\e[0;33m\]\w\[\e[0m\]\n\[\e[1;34m\]\\$ \[\e[0m\]"
+ENV PYTHONIOENCODING=utf-8
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+RUN apt-get install -y fonts-dejavu
+# Set the default shell to bash
+ENV SHELL=/bin/bash
+ENV HISTFILE=
+
+WORKDIR /app
 
 USER user
 
