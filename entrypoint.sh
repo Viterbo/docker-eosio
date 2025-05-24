@@ -42,18 +42,6 @@ if [[ -f $PWD/docker/entrypoint.sh ]]; then
     $PWD/docker/entrypoint.sh
 fi
 
-
-<<<<<<< HEAD
-# echo "**********"
-# cat /etc/profile.d/aliases.sh
-# source /etc/profile.d/aliases.sh
-# echo "**********"
-
-echo "----------"
-echo "alias ll='ls -las'"
-echo "alias telosmain='cleos --url https://telos.caleos.io '"
-echo "alias telostest='cleos --url https://testnet.telos.caleos.io '"
-=======
 echo "---- copy & paste on terminal ------"
 echo "export HOME=/app"
 echo "alias ll='ls -las'"
@@ -66,7 +54,6 @@ echo "alias cleos_system_regproducer='cleos system regproducer'"
 echo "./docker/scripts/_compile.sh"
 echo "./docker/scripts/_test.sh"
 echo "./docker/scripts/_basictoken_apply.sh"
->>>>>>> 27a6a692c3a36440e184066620a68bfdc89241dd
 echo "----------"
 echo "tail -f /tmp/nodeos.log"
 echo "cleos wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"

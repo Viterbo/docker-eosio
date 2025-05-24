@@ -1,0 +1,86 @@
+
+# Use Ubuntu 20.04 as base image
+FROM ubuntu:20.04
+
+ARG USER_ID
+ARG GROUP_ID
+
+# Create group and non-root user
+RUN addgroup --gid $GROUP_ID user \
+    && adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+
+ENV DEBIAN_FRONTEND='noninteractive'
+
+# Install core tools and terminfo library
+RUN apt-get update --fix-missing \
+    && apt-get install -y wget make git curl libtinfo6
+
+# Install dependencies for Python build and EOSIO
+RUN apt-get install -y \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    libsqlite3-dev \
+    libbz2-dev
+
+# Build and install Python 3.9.1
+RUN cd /tmp \
+    && wget 'https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz' \
+    && tar -xf Python-3.9.1.tgz \
+    && cd Python-3.9.1 \
+    && ./configure --enable-optimizations \
+    && make -j12 \
+    && make altinstall
+
+RUN python3.9 --version
+
+# Index files and install JSON CLI
+RUN apt-get update --fix-missing \
+    && apt-get install -y mlocate jq \
+    && updatedb
+
+# Locale and shell settings
+ENV LANG='C.UTF-8'
+ENV LC_ALL='C.UTF-8'
+ENV TERM='xterm-256color'
+ENV SHELL='/bin/bash'
+ENV HISTFILE=''
+ENV PYTHONIOENCODING='utf-8'
+ENV PYTHONUNBUFFERED='1'
+ENV PYTHONPATH='/app'
+ENV PS1='\[\e[0;32m\]\u@\h \[\e[0;33m\]\w\[\e[0m\]\n\[\e[1;34m\]\\$ \[\e[0m\]'
+
+# Install fonts for CLI icons
+RUN apt-get install -y fonts-dejavu
+
+# Install libicu60 from Ubuntu 18.04 archives to satisfy EOSIO dependency
+RUN cd /tmp \
+    && wget 'http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu60_60.2-3ubuntu3_amd64.deb' \
+    && apt-get install -y ./libicu60_60.2-3ubuntu3_amd64.deb
+
+# Download and install EOSIO v2.0.13 (Ubuntu 18.04 build) 
+# and EOSIO.CDT v1.8.1 (Ubuntu 20.04 build)
+RUN cd /tmp \
+    && wget 'https://github.com/EOSIO/eos/releases/download/v2.0.13/eosio_2.0.13-1-ubuntu-18.04_amd64.deb' \
+    && wget 'https://github.com/EOSIO/eosio.cdt/releases/download/v1.8.1/eosio.cdt_1.8.1-1-ubuntu-20.04_amd64.deb' \
+    && apt-get install -y ./eosio_2.0.13-1-ubuntu-18.04_amd64.deb \
+    && apt-get install -y ./eosio.cdt_1.8.1-1-ubuntu-20.04_amd64.deb
+
+WORKDIR /app
+
+COPY entrypoint.sh /
+COPY logging.json /
+
+USER user
+
+ENTRYPOINT ["bash", "/entrypoint.sh"]
+
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 \
+    CMD tail -n1 /tmp/nodeos.log
+
+
