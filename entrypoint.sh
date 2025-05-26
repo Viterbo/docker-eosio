@@ -36,10 +36,10 @@ sleep 1
 
 export HOME=/app
 
-if [[ -f $PWD/docker/entrypoint.sh ]]; then
-    echo "entry point found! $PWD/docker/entrypoint.sh"
+if [[ -f $PWD/autorun/entrypoint.sh ]]; then
+    echo "entry point found! $PWD/autorun/entrypoint.sh"
     echo "--------------------------------------------"
-    $PWD/docker/entrypoint.sh
+    $PWD/autorun/entrypoint.sh
 fi
 
 echo "---- copy & paste on terminal ------"
